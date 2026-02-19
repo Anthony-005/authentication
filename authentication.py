@@ -2,19 +2,19 @@ import hashlib
 
 class PasswordSecurity:
     def check_strength(self, password: str) -> bool:
-        if len(password) < 8:
-            print("❌ Password too short (minimum 8 characters).")
+        if len(password) < 10:
+            print(" Password is too short (minimum of 10 characters)!")
             return False
         if not any(char.isupper() for char in password):
-            print("❌ Password must contain at least one uppercase letter.")
+            print(" Password must contain at least one uppercase letter!")
             return False
         if not any(char.islower() for char in password):
-            print("❌ Password must contain at least one lowercase letter.")
+            print(" Password must contain at least one lowercase letter!")
             return False
         if not any(char.isdigit() for char in password):
-            print("❌ Password must contain at least one number.")
+            print(" Password must contain at least one number!")
             return False
-        print("✅ Password strength validated.")
+        print(" Password strength validated.")
         return True
 
     def hash_password(self, password: str) -> str:
@@ -38,34 +38,34 @@ class AuthenticationSystem:
         if ps.check_strength(password):
             hashed_pw = ps.hash_password(password)
             self.users[username] = User(username, hashed_pw)
-            print(f"✅ User '{username}' registered successfully.")
+            print(f"User '{username}' registered successfully.")
         else:
-            print("⚠️ Registration failed due to weak password.")
+            print("Registration failed due to weak password.")
 
     def login(self, username: str, password: str) -> bool:
         if username not in self.users:
-            print("❌ Username not found.")
+            print("Username not found.")
             return False
 
         user = self.users[username]
 
         if user.locked:
-            print(f"🚫 Account '{username}' is locked due to multiple failed attempts.")
+            print(f" Account '{username}' is locked due to multiple failed attempts.")
             return False
 
         ps = PasswordSecurity()
         hashed_input = ps.hash_password(password)
 
         if hashed_input == user.hashed_password:
-            print(f"✅ Login successful. Welcome, {username}!")
+            print(f" Login successful. Welcome, {username}!")
             user.failed_attempts = 0
             return True
         else:
             user.failed_attempts += 1
-            print("❌ Incorrect password.")
-            if user.failed_attempts >= 3:
+            print(" Incorrect password.")
+            if user.failed_attempts >= 5:
                 user.locked = True
-                print(f"🚨 Account '{username}' has been locked after 3 failed attempts.")
+                print(f" Account '{username}' has been locked after 5 failed attempts.")
             return False
 
 
@@ -73,7 +73,7 @@ class AuthenticationSystem:
 if __name__ == "__main__":
     system = AuthenticationSystem()
 
-    print("🔐 Welcome to the Authentication System")
+    print(" Welcome to the Authentication System")
     username = input("Enter a username to register: ")
     password = input("Enter a password: ")
 
@@ -86,22 +86,3 @@ if __name__ == "__main__":
         success = system.login(login_user, login_pass)
         if success:
             break
-
-
-# ---------------- DEMO ----------------
-if __name__ == "__main__":
-    system = AuthenticationSystem()
-
-    # Register with strong password
-    system.register("alice", "SecurePass123")
-
-    # Successful login
-    system.login("alice", "SecurePass123")
-
-    # Failed login attempts (to trigger lockout)
-    system.login("alice", "WrongPass1")
-    system.login("alice", "WrongPass2")
-    system.login("alice", "WrongPass3")  # should lock account
-
-    # Try again after lockout
-    system.login("alice", "SecurePass123")  # should be denied
