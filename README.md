@@ -1,4 +1,4 @@
-# 🔐 Authentication System
+#🔐 Authentication System
 
 ## 📌 Project Overview
 This project implements a simple authentication system in Python. It demonstrates password strength validation, secure password hashing, user registration, and login with account lockout after repeated failed attempts. The goal is to highlight core cybersecurity concepts such as authentication, password policies, hashing, and access control.
